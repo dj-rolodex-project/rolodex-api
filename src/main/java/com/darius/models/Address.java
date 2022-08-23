@@ -9,33 +9,29 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "addresses")
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Table(name="addresses")
+@Data @AllArgsConstructor @NoArgsConstructor
+@EqualsAndHashCode(exclude = {"owners"})
+@ToString(exclude = {"owners"})
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-@EqualsAndHashCode(exclude = { "owners" })
-@ToString(exclude = { "owners" }) // prevents Hibernate from causing infinite loop
 public class Address {
 
     @Id
-    @Column(name = "address_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="address_id")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
 
-    private String street; // 32 Main St.
-    private String secondary; // Apt.B
+    private String street; // 42 Main St.
+    private String secondary; // Apt. B
 
-    @Length(min = 2, max = 2)
-    private String state;// NJ
+    @Length(min=2, max=2)
+    private String state; // NJ
 
-    private String city; // Trenton
-    private String zip; // 22112-223
+    private String city;
+    private String zip; // 83838-9999
 
-    // declare the property of the owner of the relationship that this is mapped to
-    // (addresses in the User.java class)
-    @ManyToMany(mappedBy = "addresses")
-    private Set<User> owners; // list of all users who are registered at this address
+    @ManyToMany(mappedBy="addresses") // this is the property in the User class
+    private Set<User> owners;
 
     // constructor with no id and no owners field
     public Address(String street, String secondary, @Length(min = 2, max = 2) String state, String city, String zip) {
@@ -47,3 +43,5 @@ public class Address {
         this.zip = zip;
     }
 }
+
+

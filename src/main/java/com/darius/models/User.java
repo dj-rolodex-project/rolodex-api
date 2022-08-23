@@ -14,39 +14,43 @@ import javax.validation.constraints.Pattern;
 import java.util.Set;
 
 @Entity
-@Table(name = "users")
-@Data @AllArgsConstructor @NoArgsConstructor
+@Table(name="users")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class User {
 
     @Id
-    @Column(name = "user_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="user_id")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
 
-    @Length(min = 2)
+    @Length(min=2)
     private String firstName;
     private String lastName;
 
     @NotBlank
-    @Length(min = 2)
-    @Pattern(regexp = "[a-zA-Z][a-zA-Z0-9]*") // username must be alphanumeric
+    @Length(min=2)
+    @Pattern(regexp="[a-zA-Z][a-zA-Z0-9]*")
+    @Column(unique=true)
     private String username;
 
     @NotBlank
+    @Column(name="pwd")
     private String password;
 
-    @Email // checks for an @ symbol
+    @Email
+    @Column(unique=true)
     private String email;
 
-    /**
-     * Establish a ManyToMany relationship between Address and User many users may
-     * have many addresses and vice versa
-     */
+    // userId 1 -- maps to address Id 4
+    // userId 2 -- maps to address ID 4
+    // userId 1 maps to address id 6
     @ManyToMany
-    @JoinTable(name = "users_address",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "address_id"))
+    @JoinTable(name="users_address",
+            joinColumns=@JoinColumn(name="user_id"),
+            inverseJoinColumns = @JoinColumn(name="address_id"))
     private Set<Address> addresses;
 
     /**
@@ -61,3 +65,4 @@ public class User {
      */
 
 }
+
